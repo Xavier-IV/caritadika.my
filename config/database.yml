@@ -1,0 +1,20 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV["DB_HOST"] { '127.0.0.1' } %>
+  username: <%= ENV["POSTGRES_USERNAME"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+
+development:
+  <<: *default
+  database: caritadika_development
+
+test:
+  <<: *default
+  database: caritadika_test
+
+production:
+  <<: *default
+  username: caritadika
+  database: caritadika_production

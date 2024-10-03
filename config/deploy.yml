@@ -1,0 +1,59 @@
+# Name of your application. Used to uniquely configure containers.
+service: caritadika
+image: xavieriv/caritadika
+
+servers:
+  web:
+    - 192.168.178.4
+
+proxy:
+  ssl: false
+  hosts:
+    - on-prem.caritadika.my
+    - www.caritadika.my
+    - caritadika.my
+  app_port: 3000
+  forward_headers: true
+
+ssh:
+  user: zafranudin-zafrin
+
+registry:
+  username: xavieriv
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+
+env:
+  clear:
+    DB_HOST: 192.168.178.4
+    DB_PORT: 5432
+  secret:
+    - RAILS_MASTER_KEY
+    - POSTGRES_PASSWORD
+
+volumes:
+  - "/app/storage:/rails/storage"
+
+accessories:
+  db:
+    image: postgres:14
+    roles:
+      - web
+    port: 5432
+    env:
+      clear:
+        POSTGRES_USER: caritadika
+        POSTGRES_DB: caritadika_production
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+#   redis:
+#     image: redis:7.0
+#     host: 192.168.0.2
+#     port: 6379
+#     directories:
+#       - data:/data

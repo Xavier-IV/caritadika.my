@@ -1,0 +1,61 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col gap-2 text-center">
+       <h1 class="text-2xl font-semibold">Cari Tadika</h1>
+
+    <p class="text-gray-400">Senarai umum tadika, taska dan pusat jagaan di Malaysia.</p>
+
+
+    </div>
+       <div class="mt-10">
+    </div>
+    
+    <%= form_tag root_path, method: :get, class: "mb-6 flex flex-wrap gap-2" do %>
+      <%= text_field_tag :name, params[:name], 
+          placeholder: "Search by name", 
+          class: "px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+
+      <%= select_tag :state, 
+          options_for_select([["All States", "All"]], params[:state]), 
+          class: "px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+      
+      <%= select_tag :city, 
+          options_for_select([["All Cities", "All"]], params[:city]), 
+          class: "px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+      
+      <%= select_tag :business_type, 
+          options_for_select([["All Types", "All"], ["Kindergarten", "kindergarten"], ["Nursery", "nursery"], ["PJKK", "pjkk"]], params[:business_type]), 
+          class: "px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+      
+      <%= submit_tag "Filter", class: "px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2" %>
+    <% end %>
+    
+    <div class="space-y-4">
+      <% @kindergartens.each do |kindergarten| %>
+        <div class="bg-white p-4 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-medium"><%= kindergarten.name %></span>
+            <% category_color = case kindergarten.business_type 
+                                when 'kindergarten' then 'bg-blue-100 text-blue-800'
+                                when 'nursery' then 'bg-green-100 text-green-800'
+                                when 'pjkk' then 'bg-yellow-100 text-yellow-800'
+                                else 'bg-gray-100 text-gray-800'
+                                end %>
+            <span class="px-2 py-0.5 text-xs rounded-full <%= category_color %>">
+              <%= kindergarten.business_type.capitalize %>
+            </span>
+          </div>
+          <div class="text-sm text-gray-500">
+            <%= kindergarten.city %>, <%= kindergarten.state %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <% if @kindergartens.empty? %>
+      <p class="text-center text-gray-500 mt-4">No results found.</p>
+    <% end %>
+  </div>
+
+  <%= paginate @kindergartens %>
+</div>
