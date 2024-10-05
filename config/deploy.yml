@@ -4,7 +4,7 @@ image: xavieriv/caritadika
 
 servers:
   web:
-    - 192.168.178.4
+    - 100.90.117.83
 
 proxy:
   ssl: false
@@ -14,9 +14,6 @@ proxy:
     - caritadika.my
   app_port: 3000
   forward_headers: true
-
-ssh:
-  user: zafranudin-zafrin
 
 registry:
   username: xavieriv
