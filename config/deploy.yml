@@ -26,7 +26,7 @@ builder:
 
 env:
   clear:
-    DB_HOST: 192.168.178.4
+    DB_HOST: 100.90.117.83
     DB_PORT: 5432
   secret:
     - RAILS_MASTER_KEY
