@@ -1,6 +1,6 @@
 # Name of your application. Used to uniquely configure containers.
 service: caritadika
-image: xavieriv/caritadika
+image: zafranudindev/caritadika
 
 servers:
   web:
@@ -16,7 +16,8 @@ proxy:
   forward_headers: true
 
 registry:
-  username: xavieriv
+  username:
+    - KAMAL_REGISTRY_USERNAME
   password:
     - KAMAL_REGISTRY_PASSWORD
 
