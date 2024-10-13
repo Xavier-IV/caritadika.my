@@ -35,6 +35,13 @@ env:
 volumes:
   - "/app/storage:/rails/storage"
 
+aliases:
+  gen_token: app exec --interactive --reuse "bin/rails anon_tokens:generate"
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole"
+
 accessories:
   db:
     image: postgres:14

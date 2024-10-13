@@ -62,3 +62,11 @@ gem "nanoid", "~> 2.0"
 gem "kaminari", "~> 1.2"
 
 gem "pg", "~> 1.5"
+
+gem "lucide-rails", "~> 0.5.1"
+
+gem "rubocop", "~> 1.66", :groups => [:development, :test]
+
+gem "rubocop-rails", "~> 2.26", :groups => [:development, :test]
+
+gem "rails_live_reload", "~> 0.3.6", :group => :development

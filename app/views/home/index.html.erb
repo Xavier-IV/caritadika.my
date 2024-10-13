@@ -1,61 +1,159 @@
-<div class="min-h-screen bg-gray-50">
-  <div class="container mx-auto px-4 py-8">
+<div class="min-h-screen bg-gray-50 flex flex-col">
+
+  <div
+    class="
+      grow mx-auto w-full max-w-3xl flex flex-col h-full min-h-full max-h-full py-8
+      px-4 lg:px-0
+    "
+  >
     <div class="flex flex-col gap-2 text-center">
-       <h1 class="text-2xl font-semibold">Cari Tadika</h1>
+      <h1 class="text-2xl font-semibold">Cari Tadika</h1>
 
-    <p class="text-gray-400">Senarai umum tadika, taska dan pusat jagaan di Malaysia.</p>
-
+      <p class="text-gray-400">Senarai umum tadika, taska dan pusat jagaan di Malaysia.</p>
 
     </div>
-       <div class="mt-10">
+    <div class="mt-10">
     </div>
-    
+
     <%= form_tag root_path, method: :get, class: "mb-6 flex flex-wrap gap-2" do %>
-      <%= text_field_tag :name, params[:name], 
-          placeholder: "Search by name", 
-          class: "px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+      <%= text_field_tag :name,
+      params[:name],
+      placeholder: "Search by name",
+      class:
+        "px-3 py-1 min-w-20 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+      <!-- State Dropdown -->
+      <div data-controller="state-select" class="flex gap-2">
+        <%= select_tag :state,
+        options_from_collection_for_select(
+          @states,
+          "name",
+          "name",
+          selected: params[:state],
+        ),
+        prompt: "All States",
+        id: "state-select",
+        data: {
+          "state-select-target": "state",
+          action: "change->state-select#fetchCities",
+        },
+        class:
+          "px-3 py-1 bg-white border w-full max-w-40 border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
 
-      <%= select_tag :state, 
-          options_for_select([["All States", "All"]], params[:state]), 
-          class: "px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
-      
-      <%= select_tag :city, 
-          options_for_select([["All Cities", "All"]], params[:city]), 
-          class: "px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
-      
-      <%= select_tag :business_type, 
-          options_for_select([["All Types", "All"], ["Kindergarten", "kindergarten"], ["Nursery", "nursery"], ["PJKK", "pjkk"]], params[:business_type]), 
-          class: "px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
-      
-      <%= submit_tag "Filter", class: "px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2" %>
+        <%= select_tag :city,
+        options_for_select(@cities, selected: params[:city]),
+        prompt: "All Cities",
+        id: "city-select",
+        data: {
+          "state-select-target": "city",
+        },
+        class:
+          "px-3 pr-10 py-1 w-full min-w-40 max-w-40 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+
+      </div>
+      <!-- City Dropdown -->
+      <div>
+      </div>
+
+      <%= select_tag :business_category,
+      options_for_select(
+        [["All Categories", "All"], %w[Taska taska], %w[PJKK pjkk]],
+        params[:business_category],
+      ),
+      class:
+        "px-3 pr-10 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+
+      <%= submit_tag "Filter",
+      class:
+        "px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2" %>
     <% end %>
-    
+
+    <div class="lg:hidden text-sm py-4">
+      <%= paginate @kindergartens,
+      window: 0,
+      left: 0,
+      right: 0,
+      inner_window: 0,
+      outer_window: 0 %>
+    </div>
+
     <div class="space-y-4">
       <% @kindergartens.each do |kindergarten| %>
         <div class="bg-white p-4 rounded-lg shadow-sm">
           <div class="flex items-center justify-between mb-2">
             <span class="font-medium"><%= kindergarten.name %></span>
-            <% category_color = case kindergarten.business_type 
-                                when 'kindergarten' then 'bg-blue-100 text-blue-800'
-                                when 'nursery' then 'bg-green-100 text-green-800'
-                                when 'pjkk' then 'bg-yellow-100 text-yellow-800'
-                                else 'bg-gray-100 text-gray-800'
-                                end %>
+            <% category_color =
+              case kindergarten.business_category
+              when "taska"
+                "bg-blue-100 text-blue-800"
+              when "nursery"
+                "bg-green-100 text-green-800"
+              when "pjkk"
+                "bg-yellow-100 text-yellow-800"
+              else
+                "bg-gray-100 text-gray-800"
+              end %>
             <span class="px-2 py-0.5 text-xs rounded-full <%= category_color %>">
-              <%= kindergarten.business_type.capitalize %>
+              <%= kindergarten.business_category.capitalize %>
             </span>
           </div>
           <div class="text-sm text-gray-500">
-            <%= kindergarten.city %>, <%= kindergarten.state %>
+            <%= kindergarten.city %>,
+            <%= kindergarten.state %>
+          </div>
+
+          <div class="flex justify-end gap-2">
+            <% if kindergarten.email %>
+              <a
+                href="mailto:<%= kindergarten.email %>"
+                class="
+                  flex gap-2 px-2 py-2 w-fit border rounded-md items-center text-sm
+                "
+                target="_blank"
+              >
+                <span>Email</span>
+                <%= lucide_icon("mail", width: 16, height: 16) %>
+              </a>
+            <% end %>
+            <% if kindergarten.phone_number %>
+              <a
+                href="tel:<%= kindergarten.phone_number %>"
+                class="
+                  flex gap-2 px-2 py-2 w-fit border rounded-md items-center text-sm
+                "
+                target="_blank"
+              >
+                <span>Call</span>
+                <%= lucide_icon("phone", width: 16, height: 16) %>
+              </a>
+            <% end %>
+            <% if kindergarten.gps_coordinates != '-, -' %>
+              <a
+                href="<%= kindergarten.google_maps_link %>"
+                class="
+                  flex gap-1 px-2 py-2 w-fit border rounded-md items-center text-sm
+                "
+                target="_blank"
+              >
+                <span>Go to map</span>
+                <%= lucide_icon("map-pin", width: 16, height: 16) %>
+              </a>
+            <% end %>
+
           </div>
         </div>
       <% end %>
     </div>
-    
+
     <% if @kindergartens.empty? %>
       <p class="text-center text-gray-500 mt-4">No results found.</p>
     <% end %>
   </div>
 
-  <%= paginate @kindergartens %>
+  <div class="flex flex-col shrink mx-auto max-w-3xl px-2 h-full w-full py-10">
+    <div class="hidden lg:block">
+      <%= paginate @kindergartens, window: 1, inner_window: 1, outer_window: 1 %>
+    </div>
+
+  </div>
+
 </div>
