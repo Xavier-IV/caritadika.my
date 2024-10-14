@@ -32,6 +32,8 @@ env:
     - RAILS_MASTER_KEY
     - POSTGRES_PASSWORD
 
+asset_path: /rails/public/assets
+
 volumes:
   - "/app/storage:/rails/storage"
 
