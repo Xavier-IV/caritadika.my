@@ -74,3 +74,5 @@ gem "rails_live_reload", "~> 0.3.6", :group => :development
 gem "meta-tags", "~> 2.22"
 
 gem "sitemap_generator", "~> 6.3"
+
+gem "geocoder", "~> 1.8"

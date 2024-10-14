@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_13_155432) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_14_174750) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -44,6 +44,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_13_155432) do
     t.string "gps_coordinates"
     t.string "google_maps_link"
     t.string "business_category"
+    t.decimal "longitude", precision: 10, scale: 6
+    t.decimal "latitude", precision: 10, scale: 6
   end
 
   create_table "states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

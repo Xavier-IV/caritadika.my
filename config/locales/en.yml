@@ -28,4 +28,8 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  number:
+    human:
+      distance:
+        units:
+          km: "km"

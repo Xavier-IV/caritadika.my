@@ -1,26 +1,57 @@
-<div class="min-h-screen bg-gray-50 flex flex-col">
-
+<div class="min-h-screen bg-gray-100 flex flex-col">
   <div
+    data-controller="main-filter help-toggle"
     class="
       grow mx-auto w-full max-w-3xl flex flex-col h-full min-h-full max-h-full py-8
       px-4 lg:px-0
     "
   >
-    <div class="flex flex-col gap-2 text-center">
+    <div class="flex flex-col gap-2 text-center mt-10">
       <h1 class="text-2xl font-semibold">Cari Tadika</h1>
+      <p class="text-gray-500">Senarai umum tadika, taska dan pusat jagaan di Malaysia.</p>
+      <p class="text-gray-400 text-sm italic"><%= number_with_delimiter((@total / 100) * 100) %>+ Data Terkumpul. Terakhir dikemaskini
+        <%= @latest.strftime("%d/%m/%Y") %></p>
 
-      <p class="text-gray-400">Senarai umum tadika, taska dan pusat jagaan di Malaysia.</p>
+      <div class="w-full flex justify-end gap-1 my-4">
 
-      <div
-        class="
-          flex flex-col md:flex-row gap-4 items-center justify-center w-full my-2 md:my-8
-        "
-      >
+        <button
+          data-action="click->main-filter#toggle"
+          class="
+            w-fit bg-white px-4 text-md py-1.5 rounded-md border flex items-center gap-2
+            text-gray-500 hover:bg-gray-100 transition-colors duration-300
+          "
+        >
+          Filter
+          <%= lucide_icon("filter", width: 14, height: 14) %>
 
+        </button>
+        <button
+          data-action="click->help-toggle#toggle"
+          class="
+            w-fit bg-white px-4 text-md py-1.5 rounded-md border flex items-center gap-2
+            text-gray-500 hover:bg-gray-100 transition-colors duration-300
+          "
+        >
+          Help
+          <%= lucide_icon("circle-help", width: 14, height: 14) %>
+        </button>
+      </div>
+
+    </div>
+
+    <div
+      data-help-toggle-target="helpBox"
+      class="
+        hidden flex flex-col bg-white border border-gray-200 rounded-lg px-4 py-4 gap-4
+        md:items-center items-end md:justify-center w-full mb-4
+      "
+    >
+      <!-- Filters for License -->
+      <div class="flex flex-col md:flex-row gap-4">
         <div
           class="
             border rounded-full px-0.5 border-gray-200 flex gap-1 items-center
-            justify-center bg-white shadow-sm text-sm md:text-base
+            justify-center bg-white shadow-sm text-sm md:text-base w-fit md:w-auto
           "
         >
           <span class="pl-3 pr-2 text-gray-600">Lesen Aktif</span>
@@ -37,7 +68,7 @@
         <div
           class="
             border rounded-full px-0.5 border-gray-200 flex gap-1 items-center
-            justify-center bg-white shadow-sm text-sm md:text-base
+            justify-center bg-white shadow-sm text-sm md:text-base w-fit
           "
         >
           <span class="pl-3 pr-2 text-gray-600">Lesen Bakal Tamat</span>
@@ -54,7 +85,7 @@
         <div
           class="
             border rounded-full px-0.5 border-gray-200 flex gap-1 items-center
-            justify-center bg-white shadow-sm text-sm md:text-base
+            justify-center bg-white shadow-sm text-sm md:text-base w-fit
           "
         >
           <span class="pl-3 pr-2 text-gray-600">Lesen Tidak Dikenalpasti</span>
@@ -69,72 +100,79 @@
         </div>
       </div>
       <p class="text-gray-300 italic text-sm">* Tempoh sah lesen berdasarkan maklumat Jabatan Kebajikan Masyarakat</p>
-
     </div>
-    <div class="mt-10">
-    </div>
+    <!-- Filters -->
+    <div
+      data-main-filter-target="filterBox"
+      class="hidden bg-white border rounded-lg border-gray-200 px-4 py-4 mb-6"
+    >
+      <%= form_tag root_path, method: :get, class: "mb-6 flex flex-col md:flex-row flex-wrap gap-2" do %>
+        <%= text_field_tag :name,
+        params[:name],
+        placeholder: "Search by name",
+        class:
+          "px-3 py-1 min-w-20 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+        <!-- State Dropdown -->
+        <div data-controller="state-select" class="flex gap-2">
+          <%= select_tag :state,
+          options_from_collection_for_select(
+            @states,
+            "name",
+            "name",
+            selected: params[:state],
+          ),
+          prompt: "All States",
+          id: "state-select",
+          data: {
+            "state-select-target": "state",
+            action: "change->state-select#fetchCities",
+          },
+          class:
+            "px-3 py-1 bg-white border w-full md:max-w-40 border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
 
-    <%= form_tag root_path, method: :get, class: "mb-6 flex flex-wrap gap-2" do %>
-      <%= text_field_tag :name,
-      params[:name],
-      placeholder: "Search by name",
-      class:
-        "px-3 py-1 min-w-20 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
-      <!-- State Dropdown -->
-      <div data-controller="state-select" class="flex gap-2">
-        <%= select_tag :state,
-        options_from_collection_for_select(
-          @states,
-          "name",
-          "name",
-          selected: params[:state],
+          <%= select_tag :city,
+          options_for_select(@cities, selected: params[:city]),
+          prompt: "All Cities",
+          id: "city-select",
+          data: {
+            "state-select-target": "city",
+          },
+          class:
+            "px-3 pr-10 py-1 w-full min-w-40 md:max-w-40 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+        </div>
+        <!-- Business Category Dropdown -->
+        <%= select_tag :business_category,
+        options_for_select(
+          [["All Categories", "All"], %w[Taska taska], %w[PJKK pjkk]],
+          params[:business_category],
         ),
-        prompt: "All States",
-        id: "state-select",
-        data: {
-          "state-select-target": "state",
-          action: "change->state-select#fetchCities",
-        },
         class:
-          "px-3 py-1 bg-white border w-full max-w-40 border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
+          "px-3 pr-10 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
 
-        <%= select_tag :city,
-        options_for_select(@cities, selected: params[:city]),
-        prompt: "All Cities",
-        id: "city-select",
-        data: {
-          "state-select-target": "city",
-        },
+        <%= submit_tag "Filter",
         class:
-          "px-3 pr-10 py-1 w-full min-w-40 max-w-40 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
-
-      </div>
-      <!-- City Dropdown -->
-      <div>
-      </div>
-
-      <%= select_tag :business_category,
-      options_for_select(
-        [["All Categories", "All"], %w[Taska taska], %w[PJKK pjkk]],
-        params[:business_category],
-      ),
-      class:
-        "px-3 pr-10 py-1 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" %>
-
-      <%= submit_tag "Filter",
-      class:
-        "px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2" %>
-    <% end %>
-
-    <div class="lg:hidden text-sm py-4">
-      <%= paginate @kindergartens,
-      window: 0,
-      left: 0,
-      right: 0,
-      inner_window: 0,
-      outer_window: 0 %>
+          "px-6 py-2 w-full border border-blue-500 md:w-fit h-fit py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300 cursor-pointer" %>
+        <!-- Near Me Button (Stimulus) -->
+        <%= button_tag "Find Near Me",
+        id: "near-me-button",
+        class:
+          "px-3 py-2 bg-white h-fit border border-blue-500 text-blue-500 text-white rounded-md text-sm hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300",
+        data: {
+          controller: "near-me",
+          action: "click->near-me#locate",
+        } %>
+        <a
+          href="/"
+          class="
+            px-3 py-2 bg-white h-fit border border-blue-500 text-blue-500 text-white
+            rounded-md text-sm hover:bg-blue-500 hover:text-white focus:outline-none
+            focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 transition-colors
+            text-center duration-300
+          "
+        >Clear</a>
+      <% end %>
     </div>
-
+    <!-- Kindergarten Listing -->
     <div class="space-y-4">
       <% @kindergartens.each do |kindergarten| %>
         <div class="bg-white p-4 rounded-lg shadow-sm">
@@ -158,8 +196,8 @@
               <span class="px-2 py-0.5 text-xs rounded-full <%= category_color %>">
                 <%= kindergarten.business_category.capitalize %>
               </span>
-              <%- if kindergarten.jkm_valid_to.present? && kindergarten.jkm_valid_to > Date.today %>
 
+              <% if kindergarten.jkm_valid_to.present? && kindergarten.jkm_valid_to > Date.today %>
                 <% three_months_from_now = Date.today.advance(months: 3) %>
                 <% bg_color =
                   (
@@ -171,7 +209,7 @@
                   ) %>
                 <div
                   data-controller="tooltip"
-                  data-tooltip-content-value="Known active license. Until <%= kindergarten.jkm_valid_to.strftime("%d %b, %Y")  %>"
+                  data-tooltip-content-value="Known active license. Until <%= kindergarten.jkm_valid_to.strftime('%d %b, %Y') %>"
                   class="
                     w-5 h-5 flex items-center justify-center rounded-full text-white
                     <%= bg_color %>
@@ -189,22 +227,32 @@
                 >
                   <%= lucide_icon("x", width: 12, height: 12) %>
                 </div>
-
               <% end %>
             </div>
           </div>
           <div class="text-sm text-gray-500">
             <%= kindergarten.city %>,
             <%= kindergarten.state %>
-          </div>
+            <% if params[:latitude].present? && params[:longitude].present? %>
 
+              <p>Est. distance:
+                <%= number_to_human(
+                  kindergarten.distance_to([params[:latitude].to_f, params[:longitude].to_f]) ||
+                    0,
+                ) %>
+                km
+              </p>
+            <% end %>
+
+          </div>
+          <!-- Contact and Map Links -->
           <div class="flex justify-end gap-2 mt-4 md:mt-2">
-            <% if kindergarten.email %>
+            <% if kindergarten.email.present? %>
               <a
                 href="mailto:<%= kindergarten.email %>"
                 class="
-                  flex gap-2 px-2 py-2 w-fit border rounded-md items-center text-sm text-gray-500
-                  hover:bg-gray-950 hover:text-white
+                  flex gap-2 px-3 py-2 w-fit border rounded-md items-center text-sm text-gray-500
+                  hover:bg-gray-950 hover:text-white transition-colors duration-300
                 "
                 target="_blank"
               >
@@ -212,12 +260,12 @@
                 <%= lucide_icon("mail", width: 16, height: 16) %>
               </a>
             <% end %>
-            <% if kindergarten.phone_number %>
+            <% if kindergarten.phone_number.present? %>
               <a
                 href="tel:<%= kindergarten.phone_number %>"
                 class="
-                  flex gap-2 px-2 py-2 w-fit border rounded-md items-center text-sm text-gray-500
-                  hover:bg-gray-950 hover:text-white
+                  flex gap-2 px-3 py-2 w-fit border rounded-md items-center text-sm text-gray-500
+                  hover:bg-gray-950 hover:text-white transition-colors duration-300
                 "
                 target="_blank"
               >
@@ -229,8 +277,8 @@
               <a
                 href="<%= kindergarten.google_maps_link %>"
                 class="
-                  flex gap-1 px-2 py-2 w-fit border rounded-md items-center text-sm text-gray-500
-                  hover:bg-gray-950 hover:text-white
+                  flex gap-1 px-3 py-2 w-fit border rounded-md items-center text-sm text-gray-500
+                  hover:bg-gray-950 hover:text-white transition-colors duration-300
                 "
                 target="_blank"
               >
@@ -238,22 +286,28 @@
                 <%= lucide_icon("map-pin", width: 16, height: 16) %>
               </a>
             <% end %>
-
           </div>
         </div>
       <% end %>
-    </div>
 
-    <% if @kindergartens.empty? %>
-      <p class="text-center text-gray-500 mt-4">No results found.</p>
-    <% end %>
+      <% if @kindergartens.empty? %>
+        <p class="text-center text-gray-500 mt-4">No results found.</p>
+      <% end %>
+    </div>
+    <!-- Pagination -->
+    <div class="lg:hidden text-sm py-4">
+      <%= paginate @kindergartens,
+      window: 0,
+      left: 0,
+      right: 0,
+      inner_window: 0,
+      outer_window: 0 %>
+    </div>
   </div>
 
   <div class="flex flex-col shrink mx-auto max-w-3xl px-2 h-full w-full py-10">
     <div class="hidden lg:block">
       <%= paginate @kindergartens, window: 1, inner_window: 1, outer_window: 1 %>
     </div>
-
   </div>
-
 </div>

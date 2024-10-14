@@ -11,5 +11,6 @@ Rails.application.routes.draw do
 
   root "home#index"
 
+  get "near_me", to: "home#near_me"
   get "cities_for_state", to: "home#cities_for_state"
 end
