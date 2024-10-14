@@ -21,7 +21,8 @@ module ApplicationHelper
         { name: "Belasungkawa", href: "https://belasungkawa.my" },
         { name: "Meem", href: "https://usemeem.com" },
         { name: "duaa.my", href: "https://duaa.my" },
-        { name: "Semak Hadis", href: "https://semakhadis.com" }
+        { name: "Semak Hadis", href: "https://semakhadis.com" },
+        { name: "Pantunis", href: "https://pantunis.com" }
       ],
       resources: [
         { name: "Kod Sumber Terbuka", href: "https://github.com/Xavier-IV/caritadika.my" },
