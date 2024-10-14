@@ -11,6 +11,65 @@
 
       <p class="text-gray-400">Senarai umum tadika, taska dan pusat jagaan di Malaysia.</p>
 
+      <div
+        class="
+          flex flex-col md:flex-row gap-4 items-center justify-center w-full my-2 md:my-8
+        "
+      >
+
+        <div
+          class="
+            border rounded-full px-0.5 border-gray-200 flex gap-1 items-center
+            justify-center bg-white shadow-sm text-sm md:text-base
+          "
+        >
+          <span class="pl-3 pr-2 text-gray-600">Lesen Aktif</span>
+          <div
+            class="
+              w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full text-white
+              bg-green-400
+            "
+          >
+            <%= lucide_icon("check", width: 12, height: 12) %>
+          </div>
+        </div>
+
+        <div
+          class="
+            border rounded-full px-0.5 border-gray-200 flex gap-1 items-center
+            justify-center bg-white shadow-sm text-sm md:text-base
+          "
+        >
+          <span class="pl-3 pr-2 text-gray-600">Lesen Bakal Tamat</span>
+          <div
+            class="
+              w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full text-white
+              bg-orange-400
+            "
+          >
+            <%= lucide_icon("check", width: 12, height: 12) %>
+          </div>
+        </div>
+
+        <div
+          class="
+            border rounded-full px-0.5 border-gray-200 flex gap-1 items-center
+            justify-center bg-white shadow-sm text-sm md:text-base
+          "
+        >
+          <span class="pl-3 pr-2 text-gray-600">Lesen Tidak Dikenalpasti</span>
+          <div
+            class="
+              w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full text-white
+              bg-rose-500
+            "
+          >
+            <%= lucide_icon("check", width: 12, height: 12) %>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-300 italic text-sm">* Tempoh sah lesen berdasarkan maklumat Jabatan Kebajikan Masyarakat</p>
+
     </div>
     <div class="mt-10">
     </div>
@@ -80,21 +139,59 @@
       <% @kindergartens.each do |kindergarten| %>
         <div class="bg-white p-4 rounded-lg shadow-sm">
           <div class="flex items-center justify-between mb-2">
-            <span class="font-medium"><%= kindergarten.name %></span>
-            <% category_color =
-              case kindergarten.business_category
-              when "taska"
-                "bg-blue-100 text-blue-800"
-              when "nursery"
-                "bg-green-100 text-green-800"
-              when "pjkk"
-                "bg-yellow-100 text-yellow-800"
-              else
-                "bg-gray-100 text-gray-800"
-              end %>
-            <span class="px-2 py-0.5 text-xs rounded-full <%= category_color %>">
-              <%= kindergarten.business_category.capitalize %>
-            </span>
+            <div class="flex gap-4 items-center">
+              <span class="font-medium"><%= kindergarten.name %></span>
+
+            </div>
+            <div class="flex gap-2">
+              <% category_color =
+                case kindergarten.business_category
+                when "taska"
+                  "bg-blue-100 text-blue-800"
+                when "nursery"
+                  "bg-green-100 text-green-800"
+                when "pjkk"
+                  "bg-yellow-100 text-yellow-800"
+                else
+                  "bg-gray-100 text-gray-800"
+                end %>
+              <span class="px-2 py-0.5 text-xs rounded-full <%= category_color %>">
+                <%= kindergarten.business_category.capitalize %>
+              </span>
+              <%- if kindergarten.jkm_valid_to.present? && kindergarten.jkm_valid_to > Date.today %>
+
+                <% three_months_from_now = Date.today.advance(months: 3) %>
+                <% bg_color =
+                  (
+                    if kindergarten.jkm_valid_to > three_months_from_now
+                      "bg-green-400"
+                    else
+                      "bg-orange-500"
+                    end
+                  ) %>
+                <div
+                  data-controller="tooltip"
+                  data-tooltip-content-value="Known active license. Until <%= kindergarten.jkm_valid_to.strftime("%d %b, %Y")  %>"
+                  class="
+                    w-5 h-5 flex items-center justify-center rounded-full text-white
+                    <%= bg_color %>
+                  "
+                >
+                  <%= lucide_icon("check", width: 12, height: 12) %>
+                </div>
+              <% else %>
+                <div
+                  data-controller="tooltip"
+                  data-tooltip-content-value="No known license. Please check with the operation."
+                  class="
+                    w-5 h-5 flex items-center justify-center rounded-full text-white bg-rose-400
+                  "
+                >
+                  <%= lucide_icon("x", width: 12, height: 12) %>
+                </div>
+
+              <% end %>
+            </div>
           </div>
           <div class="text-sm text-gray-500">
             <%= kindergarten.city %>,
@@ -106,7 +203,8 @@
               <a
                 href="mailto:<%= kindergarten.email %>"
                 class="
-                  flex gap-2 px-2 py-2 w-fit border rounded-md items-center text-sm
+                  flex gap-2 px-2 py-2 w-fit border rounded-md items-center text-sm text-gray-500
+                  hover:bg-gray-950 hover:text-white
                 "
                 target="_blank"
               >
@@ -118,7 +216,8 @@
               <a
                 href="tel:<%= kindergarten.phone_number %>"
                 class="
-                  flex gap-2 px-2 py-2 w-fit border rounded-md items-center text-sm
+                  flex gap-2 px-2 py-2 w-fit border rounded-md items-center text-sm text-gray-500
+                  hover:bg-gray-950 hover:text-white
                 "
                 target="_blank"
               >
@@ -130,7 +229,8 @@
               <a
                 href="<%= kindergarten.google_maps_link %>"
                 class="
-                  flex gap-1 px-2 py-2 w-fit border rounded-md items-center text-sm
+                  flex gap-1 px-2 py-2 w-fit border rounded-md items-center text-sm text-gray-500
+                  hover:bg-gray-950 hover:text-white
                 "
                 target="_blank"
               >

@@ -12,8 +12,4 @@ Rails.application.routes.draw do
   root "home#index"
 
   get "cities_for_state", to: "home#cities_for_state"
-
-
-  # seo
-  get "/robots.txt", to: "pages#robots"
 end

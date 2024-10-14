@@ -13,3 +13,14 @@
  *= require_tree .
  *= require_self
  */
+
+.tooltip {
+  white-space: normal; /* Allow the text to wrap */
+  overflow: visible;
+  padding: 8px;
+  background-color: #333;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
