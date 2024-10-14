@@ -4,8 +4,15 @@
     current_page:  a page object for the currently displayed page
     total_pages:   total number of pages
     per_page:      number of items to fetch per page
-    remote:        data-remote
--%>
-<span class="last border rounded-md px-2 py-1">
-  <%= link_to_unless current_page.last?, t('views.pagination.last').html_safe, url, remote: remote %>
-</span>
+    remote:        data-remote -%>
+  <span
+    class="
+      last border bg-gray-200 rounded-md px-2 py-1 lg:flex items-center justify-center
+      hidden
+    "
+  >
+    <%= link_to_unless current_page.last?,
+    t("views.pagination.last").html_safe,
+    url,
+    remote: remote %>
+  </span>

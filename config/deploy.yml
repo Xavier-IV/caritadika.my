@@ -1,10 +1,10 @@
 # Name of your application. Used to uniquely configure containers.
 service: caritadika
-image: xavieriv/caritadika
+image: zafranudindev/caritadika
 
 servers:
   web:
-    - 192.168.178.4
+    - 100.90.117.83
 
 proxy:
   ssl: false
@@ -15,11 +15,9 @@ proxy:
   app_port: 3000
   forward_headers: true
 
-ssh:
-  user: zafranudin-zafrin
-
 registry:
-  username: xavieriv
+  username:
+    - KAMAL_REGISTRY_USERNAME
   password:
     - KAMAL_REGISTRY_PASSWORD
 
@@ -28,7 +26,7 @@ builder:
 
 env:
   clear:
-    DB_HOST: 192.168.178.4
+    DB_HOST: 100.90.117.83
     DB_PORT: 5432
   secret:
     - RAILS_MASTER_KEY
@@ -36,6 +34,13 @@ env:
 
 volumes:
   - "/app/storage:/rails/storage"
+
+aliases:
+  gen_token: app exec --interactive --reuse "bin/rails anon_tokens:generate"
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole"
 
 accessories:
   db:

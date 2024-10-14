@@ -3,9 +3,35 @@
 # This model initially had no columns defined. If you add columns to the
 # model remove the "{}" from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+
+tadika_abc:
+  name: "Tadika ABC"
+  state: "Selangor"
+  city: "Shah Alam"
+  business_type: "Institusi"
+  business_category: "Taska"
+  phone_number: "0123456789"
+  email: "info@tadikaabc.my"
+  website: "https://www.tadikaabc.my"
+  description: "A trusted kindergarten in Shah Alam."
+  jkm_registration_no: "T/012/2021"
+  jkm_valid_from: "2021-01-01"
+  jkm_valid_to: "2026-01-01"
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+tadika_xyz:
+  name: "Tadika XYZ"
+  state: "Johor"
+  city: "Johor Bahru"
+  business_type: "Institusi"
+  business_category: "Taska"
+  phone_number: "0198765432"
+  email: "contact@tadikaxyz.my"
+  website: "https://www.tadikaxyz.my"
+  description: "Providing quality early education in Johor Bahru."
+  jkm_registration_no: "T/045/2020"
+  jkm_valid_from: "2020-05-15"
+  jkm_valid_to: "2025-05-15"
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
