@@ -1,23 +1,22 @@
 class HomeController < ApplicationController
   def index
     @states = State.all
-
     @kindergartens = Kindergarten.all
 
+    @total = Kindergarten.count
+    @latest = Kindergarten.order(updated_at: :desc).limit(1).pluck(:updated_at).first
+
+    # Filter by state
     if params[:state].present?
       state = State.find_by(name: params[:state])
-      @kindergartens = @kindergartens.where(state: state) if state.present?
+      @kindergartens = @kindergartens.where(state: state.name) if state.present?
       @cities = Kindergarten.where(state: state.name).distinct.order(:city).pluck(:city) if state.present?
     else
       @cities = []
     end
 
-    if params[:city].present?
-      city = City.find_by(name: params[:city])
-      @kindergartens = @kindergartens.where(city: city) if city.present?
-    end
 
-    @kindergartens = Kindergarten.all
+    # Filter by other params
     @kindergartens = @kindergartens.filter_by_name(params[:name])
                                    .filter_by_state(params[:state])
                                    .filter_by_city(params[:city])
@@ -25,16 +24,17 @@ class HomeController < ApplicationController
                                    .order(id: :asc)
                                    .page(params[:page])
                                    .per(10)
+
+    # Handle Near Me feature (if latitude and longitude are present)
+    if params[:latitude].present? && params[:longitude].present?
+      user_location = [ params[:latitude], params[:longitude] ]
+      @kindergartens = @kindergartens.near(user_location, 10) # within 10km radius
+    end
   end
 
   def cities_for_state
     state = State.find_by(name: params[:state_name])
-    # @cities = state.cities.order(name: :asc) if state.present?
-
-    @cities = Kindergarten.where(state: state.name).distinct.order(:city).pluck(:city)
-
-    puts @cities
-
+    @cities = Kindergarten.where(state: state.name).distinct.order(:city).pluck(:city) if state.present?
 
     respond_to do |format|
       format.json { render json: @cities }
