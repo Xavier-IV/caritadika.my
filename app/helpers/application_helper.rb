@@ -4,12 +4,12 @@ module ApplicationHelper
       social: [
         {
           name: "X",
-          href: "https://x.com/afrieirham_",
+          href: "https://x.com/MohdZafranudin",
           icon: "x-icon.svg"
         },
         {
           name: "GitHub",
-          href: "https://github.com/afrieirham/kelasmengajionline",
+          href: "https://github.com/Xavier-IV/caritadika.my",
           icon: "github-icon.svg"
         }
       ],
