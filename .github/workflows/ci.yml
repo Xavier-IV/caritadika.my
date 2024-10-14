@@ -84,12 +84,6 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Set up Database Configuration
-        run: |
-          echo "DB_HOST=localhost" >> .env
-          echo "POSTGRES_USERNAME=postgres" >> .env
-          echo "POSTGRES_PASSWORD=postgres" >> .env
-
       - name: Create and Setup Database
         env:
           RAILS_ENV: test
@@ -103,6 +97,9 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
+          DB_HOST: localhost
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: postgres
         run: bin/rails test
 
       - name: Keep screenshots from failed system tests
