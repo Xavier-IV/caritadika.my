@@ -72,3 +72,5 @@ gem "rubocop-rails", "~> 2.26", :groups => [:development, :test]
 gem "rails_live_reload", "~> 0.3.6", :group => :development
 
 gem "meta-tags", "~> 2.22"
+
+gem "sitemap_generator", "~> 6.3"
