@@ -129,7 +129,7 @@ GEM
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    json (2.7.2)
+    json (2.7.4)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -269,7 +269,7 @@ GEM
     rubocop-performance (1.22.1)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
-    rubocop-rails (2.26.2)
+    rubocop-rails (2.27.0)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.52.0, < 2.0)
@@ -365,7 +365,7 @@ DEPENDENCIES
   rails (~> 7.2.1)
   rails_live_reload (~> 0.3.6)
   rubocop (~> 1.67)
-  rubocop-rails (~> 2.26)
+  rubocop-rails (~> 2.27)
   rubocop-rails-omakase
   selenium-webdriver
   sitemap_generator (~> 6.3)
