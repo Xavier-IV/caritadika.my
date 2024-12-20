@@ -69,7 +69,7 @@ gem "rubocop", "~> 1.67", :groups => [:development, :test]
 
 gem "rubocop-rails", "~> 2.26", :groups => [:development, :test]
 
-gem "rails_live_reload", "~> 0.3.6", :group => :development
+gem "rails_live_reload", "~> 0.4.0", :group => :development
 
 gem "meta-tags", "~> 2.22"
 
