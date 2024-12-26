@@ -67,7 +67,7 @@ gem "lucide-rails", "~> 0.5.1"
 
 gem "rubocop", "~> 1.67", :groups => [:development, :test]
 
-gem "rubocop-rails", "~> 2.26", :groups => [:development, :test]
+gem "rubocop-rails", "~> 2.28", :groups => [:development, :test]
 
 gem "rails_live_reload", "~> 0.3.6", :group => :development
 
